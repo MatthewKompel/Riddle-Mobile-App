@@ -1,19 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
+import { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [loaded] = useFonts({
-    Sans: require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
+  const [fontsLoaded] = useFonts({
+    'Sans': require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
   });
 
-  if (!loaded) {
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontFamily: 'SourceSansPro-Bold', fontSize: 27 }}>Open up App.js to start working on your app!</Text>
+    <View style={styles.container} onLayout={onLayoutRootView}>
+      <Text style={{ fontFamily: 'Sans', fontSize: 27 }}>Riddle</Text>
       <StatusBar style="auto" />
     </View>
   );
