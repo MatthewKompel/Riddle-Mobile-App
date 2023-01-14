@@ -48,16 +48,13 @@ export default function StackScreen() {
               },
               headerTintColor: '#fff',
               headerTitleStyle: {
+                fontFamily: 'Sans', 
+                fontSize: 27 ,
                 fontWeight: 'bold',
               },
             }}
           />
         </Stack.Navigator>
-
-        <View style={styles.container} onLayout={onLayoutRootView}>
-          <Text style={{ fontFamily: 'Sans', fontSize: 27 }}>Riddle</Text>
-          <StatusBar style="auto" />
-        </View>
       </NavigationContainer>
     </React.Fragment>
   );
