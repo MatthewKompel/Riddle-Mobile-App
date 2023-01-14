@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import ActionBarImage from './ActionBarImage';
 
-const HomeActivity = ({ navigation }) => {
+const HomeScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <ActionBarImage />,
@@ -26,4 +26,4 @@ const HomeActivity = ({ navigation }) => {
   );
 };
 
-export default HomeActivity;
+export default HomeScreen;
