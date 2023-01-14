@@ -13,8 +13,8 @@ import ActionBarImage from './pages/ActionBarImage';
 
 //https://icons8.com/license
 
-SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
+SplashScreen.preventAutoHideAsync();
 
 
 export default function StackScreen() {
@@ -47,11 +47,6 @@ export default function StackScreen() {
                 backgroundColor: '#f4511e',
               },
               headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontFamily: 'Sans', 
-                fontSize: 27 ,
-                fontWeight: 'bold',
-              },
             }}
           />
         </Stack.Navigator>
