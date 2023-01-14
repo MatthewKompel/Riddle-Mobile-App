@@ -5,7 +5,7 @@ import ActionBarImage from './ActionBarImage';
 const HomeScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => <ActionBarImage />,
+      headerRight: () => <ActionBarImage />,
     });
   }, [navigation]);
 
@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
         }}>
         What is broken before it is cooked?
       </Text>
-      <Text style={{ textAlign: 'center', color: 'grey' }}>
+      <Text style={{ textAlign: 'center', color: 'black' }}>
         Egg
       </Text>
     </SafeAreaView>
