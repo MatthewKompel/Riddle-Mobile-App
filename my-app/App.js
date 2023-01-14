@@ -1,12 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import { useCallback } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, Fragment } from 'react';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import { Svg } from 'expo'; 
 import * as SplashScreen from 'expo-splash-screen';
 
-SplashScreen.preventAutoHideAsync();
+import HomeScreen from './pages/HomeScreen';
+import ActionBarImage from './pages/ActionBarImage';
 
-export default function App() {
+//https://icons8.com/license
+
+SplashScreen.preventAutoHideAsync();
+const Stack = createStackNavigator();
+
+
+export default function StackScreen() {
   const [fontsLoaded] = useFonts({
     'Sans': require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
   });
@@ -22,12 +33,36 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <Text style={{ fontFamily: 'Sans', fontSize: 27 }}>Riddle</Text>
-      <StatusBar style="auto" />
-    </View>
+    <React.Fragment>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="HomeScreen"
+        >
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ 
+              title: 'Riddle',
+              headerStyle: {
+                backgroundColor: '#f4511e',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+        </Stack.Navigator>
+
+        <View style={styles.container} onLayout={onLayoutRootView}>
+          <Text style={{ fontFamily: 'Sans', fontSize: 27 }}>Riddle</Text>
+          <StatusBar style="auto" />
+        </View>
+      </NavigationContainer>
+    </React.Fragment>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
