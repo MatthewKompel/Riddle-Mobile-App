@@ -22,6 +22,7 @@ import ActionBarImage from './pages/ActionBarImage';
 
 const Stack = createStackNavigator();
 
+
 export default function StackScreen() {
   const [IsReady, SetIsReady] = useState(false);
 
@@ -86,9 +87,23 @@ export default function StackScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: "space-between",
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  keyboard: { flexDirection: "column" },
+  keyboardRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  key: {
+    backgroundColor: "#d3d6da",
+    padding: 10,
+    margin: 3,
+    borderRadius: 5,
+  },
+  keyLetter: {
+    fontWeight: "500",
+    fontSize: 15,
   },
 });
