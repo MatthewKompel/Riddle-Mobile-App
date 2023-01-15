@@ -1,12 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useCallback, Fragment } from 'react';
+import React, { useCallback, Fragment, useState } from 'react';
 import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import 'react-native-gesture-handler';
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Svg } from 'expo'; 
+
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import useFonts from './hooks/useFonts';
+
+import { Svg } from 'expo'; 
 
 import HomeScreen from './pages/HomeScreen';
 import ActionBarImage from './pages/ActionBarImage';
@@ -14,44 +19,48 @@ import ActionBarImage from './pages/ActionBarImage';
 //https://icons8.com/license
 
 const Stack = createStackNavigator();
-SplashScreen.preventAutoHideAsync();
-
 
 export default function StackScreen() {
-  const [fontsLoaded] = useFonts({
-    'Sans': require('./assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
-  });
+  const [IsReady, SetIsReady] = useState(false);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  const LoadFonts = async () => {
+    await useFonts();
+  };
 
-  if (!fontsLoaded) {
-    return null;
+  if (!IsReady) {
+    return (
+      <AppLoading
+        startAsync={LoadFonts}
+        onFinish={() => SetIsReady(true)}
+        onError={() => {}}
+      />
+    );
   }
 
   return (
-    <React.Fragment>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="HomeScreen"
-        >
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ 
-              title: 'Riddle',
-              headerStyle: {
-                backgroundColor: '#f4511e',
-              },
-              headerTintColor: '#fff',
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </React.Fragment>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="HomeScreen"
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ 
+            title: 'Riddle',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleAlign: 'left',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Sans',
+              fontSize: 28,
+            },
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
