@@ -67,6 +67,10 @@ const HomeScreen = ({ navigation }) => {
       <Text style={{ textAlign: 'center', color: 'black' }}>
         Egg
       </Text>
+      <View style={ styles.dashes }>
+        <View style={styles.dashItemContainer} key={index}><Text style={styles.dashBlankItem}>  </Text></View>
+        <View style={styles.dashItemContainer} key={index}><Text style={styles.dashItem}> </Text></View>
+      </View>
       <Keyboard onKeyPress={handleKeyPress} />
     </SafeAreaView>
   );
@@ -77,6 +81,37 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     flex: 1,
+  },
+
+  // dashes
+  dashInputStyle:{
+    height: 40, 
+  },
+  dashes:{
+    flex: 1,
+    flexDirection:"row",
+    alignItems: 'center',
+    alignSelf:"auto",
+    justifyContent: 'center',
+    flexWrap:"wrap"
+  },
+  dashItemContainer:{
+    flex:0,
+    padding:5,
+    margin:2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dashItem:{
+    width:20,
+    color: '#841584',
+    fontSize:20,
+    borderBottomWidth:1,
+    borderBottomColor:"black"
+  },
+  dashBlankItem:{
+    width:20,
+    fontSize:20,
   },
 
   // keyboard

@@ -6,10 +6,9 @@ import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import useFonts from './hooks/useFonts';
 
 import { Svg } from 'expo'; 
 
@@ -21,24 +20,24 @@ import ActionBarImage from './pages/ActionBarImage';
 //sf-black profile icons
 
 const Stack = createStackNavigator();
+SplashScreen.preventAutoHideAsync();
 
 
 export default function StackScreen() {
-  const [IsReady, SetIsReady] = useState(false);
+  const [fontsLoaded] = useFonts({
+    'Sans': require('my-app/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
+  });
 
-  const LoadFonts = async () => {
-    await useFonts();
-  };
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
-  if (!IsReady) {
-    return (
-      <AppLoading
-        startAsync={LoadFonts}
-        onFinish={() => SetIsReady(true)}
-        onError={() => {}}
-      />
-    );
+  if (!fontsLoaded) {
+    return null;
   }
+
 
   return (
     <NavigationContainer>
