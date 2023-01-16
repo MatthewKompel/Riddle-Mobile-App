@@ -24,6 +24,7 @@ SplashScreen.preventAutoHideAsync();
 
 
 export default function StackScreen() {
+
   const [fontsLoaded] = useFonts({
     'Sans': require('my-app/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
   });
@@ -37,7 +38,6 @@ export default function StackScreen() {
   if (!fontsLoaded) {
     return null;
   }
-
 
   return (
     <NavigationContainer>
@@ -88,21 +88,5 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     flex: 1,
-  },
-  keyboard: { flexDirection: "column" },
-  keyboardRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 10,
-  },
-  key: {
-    backgroundColor: "#d3d6da",
-    padding: 10,
-    margin: 3,
-    borderRadius: 5,
-  },
-  keyLetter: {
-    fontWeight: "500",
-    fontSize: 15,
   },
 });

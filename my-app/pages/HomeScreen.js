@@ -2,6 +2,26 @@ import React from 'react';
 import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import ActionBarImage from './ActionBarImage';
 
+const Block = ({ letter }: { letter: string }) => (
+  <View style={styles.guessSquare}>
+    <Text style={styles.guessLetter}>{letter}</Text>
+  </View>
+)
+
+const GuessRow = ({ guess }: { guess: string }) => {
+  const letters = guess.split("")
+
+  return (
+    <View style={styles.guessRow}>
+      <Block letter={letters[0]} />
+      <Block letter={letters[1]} />
+      <Block letter={letters[2]} />
+      <Block letter={letters[3]} />
+      <Block letter={letters[4]} />
+    </View>
+  )
+}
+
 const KeyboardRow = ({
   letters,
   onKeyPress,
@@ -41,6 +61,22 @@ const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
   )
 }
 
+const words = ["LIGHT", "WRUNG", "COULD", "PERKY", "MOUNT", "WHACK", "SUGAR"]
+
+interface IGuess {
+  [key: number]: string;
+}
+
+const defaultGuess: IGuess = {
+  0: "",
+  1: "",
+  2: "",
+  3: "",
+  4: "",
+  5: "",
+}
+
+// MAIN SCREEN
 const HomeScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -48,10 +84,31 @@ const HomeScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const [activeWord] = React.useState(words[0])
   const [guess, setGuess] = React.useState("")
+  const [guessIndex, setGuessIndex] = React.useState(0)
+  // const [guesses, setGuesses] = React.useState < IGuess > defaultGuess
 
   const handleKeyPress = (letter: string) => {
+    const guess: string = guesses[guessIndex]
+
+    if (!words.includes(guess)) {
+      alert("Not a valid word.")
+      return
+    }
+
+    if (guess === activeWord) {
+      alert("You win!")
+      return
+    }
+
+    if (letter === "⌫") {
+      setGuess(guess.slice(0, -1))
+      return
+    }
+
     setGuess(guess + letter)
+    
   }
 
   return (
@@ -64,13 +121,24 @@ const HomeScreen = ({ navigation }) => {
         }}>
         What is broken before it is cooked?
       </Text>
-      <Text style={{ textAlign: 'center', color: 'black' }}>
-        Egg
-      </Text>
-      <View style={ styles.dashes }>
-        <View style={styles.dashItemContainer} key={index}><Text style={styles.dashBlankItem}>  </Text></View>
-        <View style={styles.dashItemContainer} key={index}><Text style={styles.dashItem}> </Text></View>
+      <View>
+        <GuessRow guess={guess} />
+        <GuessRow guess="" />
+        <GuessRow guess="" />
+        <GuessRow guess="" />
+        <GuessRow guess="" />
+        <GuessRow guess="" />
       </View>
+      <View style={ styles.dashes }>
+        <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>E</Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>G</Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>G</Text></View>
+        <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
+      </View>
+      <Text style={{ textAlign: 'center', color: 'black' }}>
+        ROD
+      </Text>
       <Keyboard onKeyPress={handleKeyPress} />
     </SafeAreaView>
   );
@@ -83,7 +151,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // dashes
+  guessRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  // DASHES
   dashInputStyle:{
     height: 40, 
   },
@@ -95,17 +168,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap:"wrap"
   },
-  dashItemContainer:{
+  dashEmptyContainer:{
     flex:0,
     padding:5,
     margin:2,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  dashItemContainer:{
+    flex:0,
+    padding:5,
+    margin:2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth:1,
+    borderBottomColor:"black"
+  },
   dashItem:{
     width:20,
     color: '#841584',
     fontSize:20,
+    marginLeft: 4,
     borderBottomWidth:1,
     borderBottomColor:"black"
   },
@@ -114,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize:20,
   },
 
-  // keyboard
+  // KEYBOARD
   keyboard: { flexDirection: "column" },
   keyboardRow: {
     flexDirection: "row",
