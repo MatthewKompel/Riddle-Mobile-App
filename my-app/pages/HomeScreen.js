@@ -80,7 +80,7 @@ const defaultGuess: IGuess = {
 async function getRiddle() {
   console.log('getting riddle')
   await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
-    console.log(response.data)
+    this.setState({question: response.data.Question})
   })
   .catch(error => console.info(error))
 }
@@ -120,6 +120,10 @@ const HomeScreen = ({ navigation }) => {
     
   }
 
+  state = {
+    question: 'Riddle Placeholder'
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Button
@@ -134,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        What is broken before it is cooked?
+        {this.state.question}
       </Text>
       <View>
         <GuessRow guess={guess} />
