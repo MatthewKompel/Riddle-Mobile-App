@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button } from 'react-native';
 import ActionBarImage from './ActionBarImage';
+import axios from 'axios';
 
 const Block = ({ letter }: { letter: string }) => (
   <View style={styles.guessSquare}>
@@ -76,6 +77,14 @@ const defaultGuess: IGuess = {
   5: "",
 }
 
+async function getRiddle() {
+  console.log('getting riddle')
+  await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
+    console.log(response.data)
+  })
+  .catch(error => console.info(error))
+}
+
 // MAIN SCREEN
 const HomeScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
@@ -113,6 +122,12 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <Button
+        onPress={getRiddle}
+        title="Get Riddle"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button"
+      />
       <Text
         style={{
           fontSize: 25,

@@ -6,8 +6,10 @@ import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import * as Font from 'expo-font';
-import { useFonts } from 'expo-font';
+import {
+  useFonts,
+  OpenSans_400Regular,
+} from '@expo-google-fonts/open-sans';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { Svg } from 'expo'; 
@@ -25,62 +27,56 @@ SplashScreen.preventAutoHideAsync();
 
 export default function StackScreen() {
 
-  const [fontsLoaded] = useFonts({
-    'Sans': require('my-app/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf'),
+  let [fontsLoaded] = useFonts({
+    OpenSans_400Regular,
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
   if (!fontsLoaded) {
-    return null;
+    SplashScreen.hideAsync();
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="HomeScreen"
+        >
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{ 
+              title: 'Riddle',
+              headerStyle: {
+                backgroundColor: '#f4511e',
+              },
+              headerTintColor: '#fff',
+              headerTitleAlign: 'left',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontFamily: 'OpenSans_400Regular',
+                fontSize: 28,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{ 
+              title: 'Your Profile',
+              headerStyle: {
+                backgroundColor: '#f4511e',
+              },
+              headerTintColor: '#fff',
+              headerTitleAlign: 'left',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontFamily: 'OpenSans_400Regular',
+                fontSize: 28,
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
   }
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="HomeScreen"
-      >
-        <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{ 
-            title: 'Riddle',
-            headerStyle: {
-              backgroundColor: '#f4511e',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'left',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontFamily: 'Sans',
-              fontSize: 28,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
-          options={{ 
-            title: 'Your Profile',
-            headerStyle: {
-              backgroundColor: '#f4511e',
-            },
-            headerTintColor: '#fff',
-            headerTitleAlign: 'left',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontFamily: 'Sans',
-              fontSize: 28,
-            },
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
 }
 
 
