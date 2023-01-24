@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button } from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
@@ -77,14 +77,6 @@ const defaultGuess: IGuess = {
   5: "",
 }
 
-async function getRiddle() {
-  console.log('getting riddle')
-  await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
-    this.setState({question: response.data.Question})
-  })
-  .catch(error => console.info(error))
-}
-
 // MAIN SCREEN
 const HomeScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
@@ -93,10 +85,19 @@ const HomeScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  const [riddle, setRiddle] = React.useState("Riddle Placeholder")
   const [activeWord] = React.useState(words[0])
   const [guess, setGuess] = React.useState("")
   const [guessIndex, setGuessIndex] = React.useState(0)
   // const [guesses, setGuesses] = React.useState < IGuess > defaultGuess
+
+  async function getRiddle() {
+    console.log('getting riddle')
+    await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
+      setRiddle(response.data.Question)
+    })
+    .catch(error => console.info(error))
+  }
 
   const handleKeyPress = (letter: string) => {
     const guess: string = guesses[guessIndex]
@@ -120,10 +121,6 @@ const HomeScreen = ({ navigation }) => {
     
   }
 
-  state = {
-    question: 'Riddle Placeholder'
-  }
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Button
@@ -138,7 +135,7 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        {this.state.question}
+        {riddle}
       </Text>
       <View>
         <GuessRow guess={guess} />
