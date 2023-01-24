@@ -87,6 +87,14 @@ const HomeScreen = ({ navigation }) => {
 
   const handleKeyPress = (letter: string) => {
     /*
+
+    if (letter === "ENTER") {
+      if (guess.length !== 5) {
+        alert("Word too short.")
+        return
+      }
+    }
+    
     if (!words.includes(guess)) {
       alert("Not a valid word.")
       return
