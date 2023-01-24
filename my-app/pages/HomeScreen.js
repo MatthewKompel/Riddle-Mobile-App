@@ -62,20 +62,7 @@ const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
   )
 }
 
-const words = ["LIGHT", "WRUNG", "COULD", "PERKY", "MOUNT", "WHACK", "SUGAR"]
-
-interface IGuess {
-  [key: number]: string;
-}
-
-const defaultGuess: IGuess = {
-  0: "",
-  1: "",
-  2: "",
-  3: "",
-  4: "",
-  5: "",
-}
+const words = ["LIGHT", "WRUNG", "COULD", "PERKY", "MOUNT", "WHACK", "SUGAR", "EGG"]
 
 // MAIN SCREEN
 const HomeScreen = ({ navigation }) => {
@@ -86,22 +73,20 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
 
   const [riddle, setRiddle] = React.useState("Riddle Placeholder")
-  const [activeWord] = React.useState(words[0])
   const [guess, setGuess] = React.useState("")
-  const [guessIndex, setGuessIndex] = React.useState(0)
-  // const [guesses, setGuesses] = React.useState < IGuess > defaultGuess
 
   async function getRiddle() {
     console.log('getting riddle')
     await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
       setRiddle(response.data.Question)
+      console.log(response.data.Answer)
+      console.log(response.data.Answer.length)
     })
     .catch(error => console.info(error))
   }
 
   const handleKeyPress = (letter: string) => {
-    const guess: string = guesses[guessIndex]
-
+    /*
     if (!words.includes(guess)) {
       alert("Not a valid word.")
       return
@@ -111,6 +96,7 @@ const HomeScreen = ({ navigation }) => {
       alert("You win!")
       return
     }
+    */
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
@@ -137,19 +123,11 @@ const HomeScreen = ({ navigation }) => {
         }}>
         {riddle}
       </Text>
-      <View>
-        <GuessRow guess={guess} />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-      </View>
       <View style={ styles.dashes }>
         <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
-        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>E</Text></View>
-        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>G</Text></View>
-        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>G</Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>{guess}</Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}></Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}></Text></View>
         <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
       </View>
       <Text style={{ textAlign: 'center', color: 'black' }}>

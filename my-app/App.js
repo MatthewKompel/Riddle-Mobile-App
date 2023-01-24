@@ -9,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import {
   useFonts,
   OpenSans_400Regular,
+  OpenSans_700Bold,
 } from '@expo-google-fonts/open-sans';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -51,7 +52,7 @@ export default function StackScreen() {
               headerTitleAlign: 'left',
               headerTitleStyle: {
                 fontWeight: 'bold',
-                fontFamily: 'OpenSans_400Regular',
+                fontFamily: 'OpenSans_700Bold',
                 fontSize: 28,
               },
             }}
@@ -68,7 +69,7 @@ export default function StackScreen() {
               headerTitleAlign: 'left',
               headerTitleStyle: {
                 fontWeight: 'bold',
-                fontFamily: 'OpenSans_400Regular',
+                fontFamily: 'OpenSans_700Bold',
                 fontSize: 28,
               },
             }}
