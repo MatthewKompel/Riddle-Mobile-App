@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration } from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
+
+const ONE_SECOND_IN_MS = 1000;
+
+const PATTERN = [
+  1 * ONE_SECOND_IN_MS,
+]
 
 const Block = ({ letter }: { letter: string }) => (
   <View style={styles.guessSquare}>
@@ -102,6 +108,7 @@ const HomeScreen = ({ navigation }) => {
 
     if (guess === activeWord) {
       alert("You win!")
+      Vibration.vibrate(PATTERN)
       return
     }
     */
@@ -150,7 +157,7 @@ const styles = StyleSheet.create({
 
   container: {
     justifyContent: "space-between",
-    flex: 1,
+    flex: 1, // TELLS YOU HOW MUch OF THE SCREEN IT TAKES UP, 1 = 100%
   },
 
   guessRow: {

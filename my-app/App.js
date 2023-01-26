@@ -84,6 +84,6 @@ export default function StackScreen() {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
-    flex: 1,
+    flex: 1, // TELLS YOU HOW MUch OF THE SCREEN IT TAKES UP, 1 = 100%
   },
 });
