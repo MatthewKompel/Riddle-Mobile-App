@@ -146,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
       </View>
       <Text style={{ textAlign: 'center', color: 'black' }}>
-        ROD
+        EYE
       </Text>
       <Keyboard onKeyPress={handleKeyPress} />
     </SafeAreaView>
