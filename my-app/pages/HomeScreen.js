@@ -1,7 +1,13 @@
-import React from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration } from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
+
+const ONE_SECOND_IN_MS = 1000;
+
+const PATTERN = [
+  1 * ONE_SECOND_IN_MS,
+]
 
 const Block = ({ letter }: { letter: string }) => (
   <View style={styles.guessSquare}>
@@ -62,28 +68,7 @@ const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
   )
 }
 
-const words = ["LIGHT", "WRUNG", "COULD", "PERKY", "MOUNT", "WHACK", "SUGAR"]
-
-interface IGuess {
-  [key: number]: string;
-}
-
-const defaultGuess: IGuess = {
-  0: "",
-  1: "",
-  2: "",
-  3: "",
-  4: "",
-  5: "",
-}
-
-async function getRiddle() {
-  console.log('getting riddle')
-  await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
-    console.log(response.data)
-  })
-  .catch(error => console.info(error))
-}
+const words = ["LIGHT", "WRUNG", "COULD", "PERKY", "MOUNT", "WHACK", "SUGAR", "EGG"]
 
 // MAIN SCREEN
 const HomeScreen = ({ navigation }) => {
@@ -93,14 +78,29 @@ const HomeScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const [activeWord] = React.useState(words[0])
+  const [riddle, setRiddle] = React.useState("Riddle Placeholder")
   const [guess, setGuess] = React.useState("")
-  const [guessIndex, setGuessIndex] = React.useState(0)
-  // const [guesses, setGuesses] = React.useState < IGuess > defaultGuess
+
+  async function getRiddle() {
+    console.log('getting riddle')
+    await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
+      setRiddle(response.data.Question)
+      console.log(response.data.Answer)
+      console.log(response.data.Answer.length)
+    })
+    .catch(error => console.info(error))
+  }
 
   const handleKeyPress = (letter: string) => {
-    const guess: string = guesses[guessIndex]
+    /*
 
+    if (letter === "ENTER") {
+      if (guess.length !== 5) {
+        alert("Word too short.")
+        return
+      }
+    }
+    
     if (!words.includes(guess)) {
       alert("Not a valid word.")
       return
@@ -108,8 +108,10 @@ const HomeScreen = ({ navigation }) => {
 
     if (guess === activeWord) {
       alert("You win!")
+      Vibration.vibrate(PATTERN)
       return
     }
+    */
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
@@ -134,21 +136,13 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        What is broken before it is cooked?
+        {riddle}
       </Text>
-      <View>
-        <GuessRow guess={guess} />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-        <GuessRow guess="" />
-      </View>
       <View style={ styles.dashes }>
         <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
-        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>E</Text></View>
-        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>G</Text></View>
-        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>G</Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>{guess}</Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}></Text></View>
+        <View style={styles.dashItemContainer} ><Text style={styles.dashItem}></Text></View>
         <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
       </View>
       <Text style={{ textAlign: 'center', color: 'black' }}>
@@ -163,7 +157,7 @@ const styles = StyleSheet.create({
 
   container: {
     justifyContent: "space-between",
-    flex: 1,
+    flex: 1, // TELLS YOU HOW MUch OF THE SCREEN IT TAKES UP, 1 = 100%
   },
 
   guessRow: {
