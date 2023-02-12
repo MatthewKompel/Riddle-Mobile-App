@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput} from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput, FlatList} from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
 import { StatusBar } from "expo-status-bar";
@@ -94,12 +94,16 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     if(loggedIn) {
       getRiddle()
+      setHistory([])
+      setGuess("")
+      setUsedHint(false)
+      setGuessCounter(0)
     }
   },[loggedIn]);
   async function loginUser() {
     await axios.post('https://riddlebackend-production.up.railway.app/loginUser',{
         username: email,
-        password: password
+        password: password,
     }).then(response => {
       console.log("RES",response.data)
       if(response.data == "successful login") {
@@ -137,21 +141,25 @@ const HomeScreen = ({ navigation }) => {
         return
       }
       else if(guess.toUpperCase() !== answer.toUpperCase()) {
-        alert("Incorrect")
         setGuessCounter(guessCounter+1)
 
-        if(guessCounter === 5) {
-          alert("You lose! The word was" + {answer})
+        if(guessCounter === 4) {
+          alert("You ran out of Guesses! The word was " + answer)
+          setHistory([...guessHistory, guess])
+          return
         }
+        alert("Incorrect")
+
+        setHistory([...guessHistory, guess + ", "])
         if(usedHint) {
           setGuess(answer[0])
         } else {
           setGuess("")
         }
-
         return
       } else if (guess.toUpperCase() == answer.toUpperCase()) {
         alert("You Win! Come back tomorrow to see a brand new riddle!")
+        Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
         setGuess("")
         handleWin()
@@ -162,18 +170,6 @@ const HomeScreen = ({ navigation }) => {
     async function handleWin() {
       console.log("GUESSES USED",guessCounter)
     }
-    /*
-    if (!words.includes(guess)) {
-      alert("Not a valid word.")
-      return
-    }
-
-    if (guess === activeWord) {
-      alert("You win!")
-      Vibration.vibrate(PATTERN)
-      return
-    }
-    */
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
@@ -200,10 +196,13 @@ const HomeScreen = ({ navigation }) => {
         <View style={ styles.dashes }>
           <GuessRow guess={guess}/>
         </View>
-
         <Text style={{ textAlign: 'center', color: 'black' }}>
-          Guesses Made: {guessHistory}
+          <Text>Guesses Remaining: {5 - guessCounter}</Text>
         </Text>
+        <Text style={{ textAlign: 'center', color: 'black' }}>
+          <Text>Guesses Made: {guessHistory}</Text>
+        </Text>
+
         <Pressable 
           disabled = {usedHint}
           style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green'}]}
@@ -214,8 +213,6 @@ const HomeScreen = ({ navigation }) => {
         
         <Keyboard onKeyPress={handleKeyPress} />
       </SafeAreaView>
-
-      
     );
   } else {
     return (
