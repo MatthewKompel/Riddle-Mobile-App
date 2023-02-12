@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput} from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput, FlatList} from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
 import { StatusBar } from "expo-status-bar";
@@ -26,6 +26,8 @@ const GuessRow = ({ guess }: { guess: string }) => {
       <Block letter={letters[2]} />
       <Block letter={letters[3]} />
       <Block letter={letters[4]} />
+      <Block letter={letters[5]} />
+      <Block letter={letters[6]} />
     </View>
   )
 }
@@ -69,8 +71,6 @@ const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
   )
 }
 
-const words = ["LIGHT", "WRUNG", "COULD", "PERKY", "MOUNT", "WHACK", "SUGAR", "EGG"]
-
 // MAIN SCREEN
 const HomeScreen = ({ navigation }) => {
   
@@ -86,6 +86,7 @@ const HomeScreen = ({ navigation }) => {
   const [guess, setGuess] = React.useState("")
   const [usedHint, setUsedHint] = useState(false)
   const [guessCounter, setGuessCounter] = useState(0)
+  const [guessHistory, setHistory] = useState("")
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -93,12 +94,16 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     if(loggedIn) {
       getRiddle()
+      setHistory([])
+      setGuess("")
+      setUsedHint(false)
+      setGuessCounter(0)
     }
   },[loggedIn]);
   async function loginUser() {
     await axios.post('https://riddlebackend-production.up.railway.app/loginUser',{
         username: email,
-        password: password
+        password: password,
     }).then(response => {
       console.log("RES",response.data)
       if(response.data == "successful login") {
@@ -127,14 +132,25 @@ const HomeScreen = ({ navigation }) => {
   const handleKeyPress = (letter: string) => {
 
     if (letter === "ENTER") {
-      if (guess.length !== answer.length) {
+      if (guess.length < answer.length) {
         alert("Word too short.")
         return
       }
+      else if (guess.length > answer.length) {
+        alert("Word too long.")
+        return
+      }
       else if(guess.toUpperCase() !== answer.toUpperCase()) {
-        alert("Incorrect")
         setGuessCounter(guessCounter+1)
-        console.log(guessCounter)
+
+        if(guessCounter === 4) {
+          alert("You ran out of Guesses! The word was " + answer)
+          setHistory([...guessHistory, guess])
+          return
+        }
+        alert("Incorrect")
+
+        setHistory([...guessHistory, guess + ", "])
         if(usedHint) {
           setGuess(answer[0])
         } else {
@@ -142,7 +158,8 @@ const HomeScreen = ({ navigation }) => {
         }
         return
       } else if (guess.toUpperCase() == answer.toUpperCase()) {
-        alert("You Win!")
+        alert("You Win! Come back tomorrow to see a brand new riddle!")
+        Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
         setGuess("")
         handleWin()
@@ -153,18 +170,6 @@ const HomeScreen = ({ navigation }) => {
     async function handleWin() {
       console.log("GUESSES USED",guessCounter)
     }
-    /*
-    if (!words.includes(guess)) {
-      alert("Not a valid word.")
-      return
-    }
-
-    if (guess === activeWord) {
-      alert("You win!")
-      Vibration.vibrate(PATTERN)
-      return
-    }
-    */
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
@@ -187,17 +192,17 @@ const HomeScreen = ({ navigation }) => {
           }}>
           {riddle}
         </Text>
-        <View style={ styles.dashes }>
-          <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
-          <View style={styles.dashItemContainer} ><Text style={styles.dashItem}>{guess}</Text></View>
-          <View style={styles.dashItemContainer} ><Text style={styles.dashItem}></Text></View>
-          <View style={styles.dashItemContainer} ><Text style={styles.dashItem}></Text></View>
-          <View style={styles.dashEmptyContainer} ><Text style={styles.dashBlankItem}>  </Text></View>
-        </View>
 
+        <View style={ styles.dashes }>
+          <GuessRow guess={guess}/>
+        </View>
         <Text style={{ textAlign: 'center', color: 'black' }}>
-          EYE
+          <Text>Guesses Remaining: {5 - guessCounter}</Text>
         </Text>
+        <Text style={{ textAlign: 'center', color: 'black' }}>
+          <Text>Guesses Made: {guessHistory}</Text>
+        </Text>
+
         <Pressable 
           disabled = {usedHint}
           style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green'}]}
@@ -208,8 +213,6 @@ const HomeScreen = ({ navigation }) => {
         
         <Keyboard onKeyPress={handleKeyPress} />
       </SafeAreaView>
-
-      
     );
   } else {
     return (
@@ -271,6 +274,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  guessSquare: {
+    borderColor: "#d3d6da",
+    borderWidth: 2,
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 5,
+  },
+
+  guessLetter: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#878a8c",
+  },
+
   // DASHES
   dashInputStyle:{
     height: 40, 
@@ -329,6 +348,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 15,
   },
+
   //Login
   container: {
     flex: 1,
