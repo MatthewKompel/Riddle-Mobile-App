@@ -17,20 +17,95 @@ const Block = ({ letter }: { letter: string }) => (
   </View>
 )
 
-const GuessRow = ({ guess }: { guess: string }) => {
+const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
   const letters = guess.split("")
+  console.log("le",answer.length)
+  if (answer.length == 1) {
+    console.log("1")
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+      </View>
+    )
+  } else if (answer.length == 2) {
+    console.log("2")
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+      </View>
+    )
+  } else if (answer.length == 3) {
+    console.log("3")
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        
+      </View>
+    )
+  } else if (answer.length == 4) {
+    console.log("4")
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        <Block letter={letters[3]} />
+      </View>
+    )
+  } else if (answer.length == 5) {
+    console.log("5")
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        <Block letter={letters[3]} />
+        <Block letter={letters[4]} />
+      </View>
+    )
+  } else if (answer.length == 6) {
+    console.log("6")
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        <Block letter={letters[3]} />
+        <Block letter={letters[4]} />
+        <Block letter={letters[5]} />
+        
+      </View>
+    )
+  } else if (answer.length == 7) {
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        <Block letter={letters[3]} />
+        <Block letter={letters[4]} />
+        <Block letter={letters[5]} />
+        <Block letter={letters[6]} />
+      </View>
+    )
+  } else if (answer.length == 8) {
+    return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        <Block letter={letters[3]} />
+        <Block letter={letters[4]} />
+        <Block letter={letters[5]} />
+        <Block letter={letters[6]} />
+        <Block letter={letters[7]} />
+      </View>
+    )
+  }
 
-  return (
-    <View style={styles.guessRow}>
-      <Block letter={letters[0]} />
-      <Block letter={letters[1]} />
-      <Block letter={letters[2]} />
-      <Block letter={letters[3]} />
-      <Block letter={letters[4]} />
-      <Block letter={letters[5]} />
-      <Block letter={letters[6]} />
-    </View>
-  )
 }
 
 const KeyboardRow = ({
@@ -92,7 +167,7 @@ const HomeScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false)
-
+  const [show,setShow] = useState(true)
 
   //Sign up modal variables
   const [signupUsername, setSignupUsername] = useState("")
@@ -196,7 +271,7 @@ const HomeScreen = ({ navigation }) => {
   if(loggedIn) {
     return (
     
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }} >
         
         <Text
           style={{
@@ -208,8 +283,10 @@ const HomeScreen = ({ navigation }) => {
         </Text>
 
         <View style={ styles.dashes }>
-          <GuessRow guess={guess}/>
+          <GuessRow guess={guess} answer = {answer} />
         </View>
+
+        
         <Text style={{ textAlign: 'center', color: 'black' }}>
           <Text>Guesses Remaining: {5 - guessCounter}</Text>
         </Text>
