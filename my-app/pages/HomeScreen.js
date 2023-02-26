@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput, FlatList} from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput, Modal, FlatList} from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
 import { StatusBar } from "expo-status-bar";
@@ -90,6 +90,13 @@ const HomeScreen = ({ navigation }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false)
+
+
+  //Sign up modal variables
+  const [signupUsername, setSignupUsername] = useState("")
+  const [signupEmail, setSignupEmail] = useState("")
+  const [signupPassword, setSignupPassword] = useState("")
 
   useEffect(() => {
     if(loggedIn) {
@@ -114,6 +121,9 @@ const HomeScreen = ({ navigation }) => {
     })
     .catch(error => console.info(error))
   }
+  async function signUpUser() {
+    //Set sign up verifications here
+  }
   async function getRiddle() {
     console.log('getting riddle')
     await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
@@ -128,6 +138,9 @@ const HomeScreen = ({ navigation }) => {
     console.log("getting hint")
     setGuess(answer[0])
     setUsedHint(true)
+  }
+  async function startSignUp() {
+    setShowModal(true)
   }
   const handleKeyPress = (letter: string) => {
 
@@ -222,7 +235,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
-            placeholder="Enter Your Email"
+            placeholder="Username or Email"
             placeholderTextColor="#003f5c"
             onChangeText={(email) => setEmail(email)}
           /> 
@@ -230,7 +243,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
-            placeholder="Enter Your Password"
+            placeholder="Password"
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
@@ -241,7 +254,49 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity> 
         <TouchableOpacity style={styles.loginBtn} onPress={loginUser}>
           <Text style={styles.loginText}>LOGIN</Text> 
-        </TouchableOpacity> 
+        </TouchableOpacity>
+        
+        <Text>{'\n'}Dont have an account?</Text> 
+        <TouchableOpacity onPress={startSignUp}>
+          <Text>Sign Up</Text> 
+        </TouchableOpacity>
+        <Modal 
+          visible = {showModal}
+          
+        >
+          <View style = {{backgroundColor: "#ebab8f",flex: 1}}  >
+            <View style = {{backgroundColor: "#ffffff", margin: 40, paddingTop: 100, marginTop: 150, borderTopLeftRadius: 10,borderTopRightRadius: 10, borderBottomLeftRadius: 10,borderBottomRightRadius: 10,}}>
+              <Text style = {{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}> 
+                Create Your Account!
+                {'\n'}
+                {'\n'}
+              </Text>
+              <TextInput
+                style={styles.signupInput}
+                placeholder="Username"
+                placeholderTextColor="#003f5c"
+                onChangeText={(signupUsername) => setSignupUsername(signupUsername)}
+              /> 
+             <TextInput
+                style={styles.signupInput}
+                placeholder="Email"
+                placeholderTextColor="#003f5c"
+                secureTextEntry={true}
+                onChangeText={(signupEmail) => setSignupEmail(signupEmail)}
+              /> 
+              <TextInput
+                style={styles.signupInput}
+                placeholder="Password"
+                placeholderTextColor="#003f5c"
+                secureTextEntry={true}
+                onChangeText={(signupPassword) => setSignupPassword(signupPassword)}
+              /> 
+              <TouchableOpacity style={styles.signupBtn} onPress={signUpUser}>
+                <Text style={styles.loginText}>SIGN UP</Text> 
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View> 
       );
   }
@@ -384,6 +439,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
+    backgroundColor: "#fa8541",
+  },
+  //Sign up 
+  signupInput: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  signupBtn: {
+    width: "60%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 64,
     backgroundColor: "#fa8541",
   },
 })
