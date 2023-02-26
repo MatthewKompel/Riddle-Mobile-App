@@ -4,7 +4,7 @@ import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibrati
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
 import { StatusBar } from "expo-status-bar";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ONE_SECOND_IN_MS = 1000;
 
 const PATTERN = [
@@ -19,16 +19,15 @@ const Block = ({ letter }: { letter: string }) => (
 
 const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
   const letters = guess.split("")
-  console.log("le",answer.length)
   if (answer.length == 1) {
-    console.log("1")
+  
     return (
       <View style={styles.guessRow}>
         <Block letter={letters[0]} />
       </View>
     )
   } else if (answer.length == 2) {
-    console.log("2")
+    
     return (
       <View style={styles.guessRow}>
         <Block letter={letters[0]} />
@@ -36,7 +35,7 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
       </View>
     )
   } else if (answer.length == 3) {
-    console.log("3")
+   
     return (
       <View style={styles.guessRow}>
         <Block letter={letters[0]} />
@@ -46,7 +45,7 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
       </View>
     )
   } else if (answer.length == 4) {
-    console.log("4")
+
     return (
       <View style={styles.guessRow}>
         <Block letter={letters[0]} />
@@ -56,7 +55,7 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
       </View>
     )
   } else if (answer.length == 5) {
-    console.log("5")
+  
     return (
       <View style={styles.guessRow}>
         <Block letter={letters[0]} />
@@ -67,7 +66,7 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
       </View>
     )
   } else if (answer.length == 6) {
-    console.log("6")
+   
     return (
       <View style={styles.guessRow}>
         <Block letter={letters[0]} />
@@ -163,43 +162,26 @@ const HomeScreen = ({ navigation }) => {
   const [usedHint, setUsedHint] = useState(false)
   const [guessCounter, setGuessCounter] = useState(0)
   const [guessHistory, setHistory] = useState("")
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState(false)
-  const [show,setShow] = useState(true)
-
+  const [userData,setUserData] = useState()
   //Sign up modal variables
-  const [signupUsername, setSignupUsername] = useState("")
-  const [signupEmail, setSignupEmail] = useState("")
-  const [signupPassword, setSignupPassword] = useState("")
 
   useEffect(() => {
-    if(loggedIn) {
-      getRiddle()
-      setHistory([])
-      setGuess("")
-      setUsedHint(false)
-      setGuessCounter(0)
-    }
-  },[loggedIn]);
-  async function loginUser() {
-    await axios.post('https://riddlebackend-production.up.railway.app/loginUser',{
-        username: email,
-        password: password,
-    }).then(response => {
-      console.log("RES",response.data)
-      if(response.data == "successful login") {
-        setLoggedIn(true)
-      } else {
-        alert("Incorrect Email or Password")
+      
+    getRiddle()
+    setHistory([])
+    setGuess("")
+    setUsedHint(false)
+    setGuessCounter(0)
+    async function getUser() {
+      try{
+        const user = await AsyncStorage.getItem("riddle_user")
+        setUserData(JSON.parse(user))
+      } catch(e) {
+        throw(e)
       }
-    })
-    .catch(error => console.info(error))
-  }
-  async function signUpUser() {
-    //Set sign up verifications here
-  }
+    }
+    getUser()
+  },[]);
   async function getRiddle() {
     console.log('getting riddle')
     await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
@@ -215,9 +197,7 @@ const HomeScreen = ({ navigation }) => {
     setGuess(answer[0])
     setUsedHint(true)
   }
-  async function startSignUp() {
-    setShowModal(true)
-  }
+
   const handleKeyPress = (letter: string) => {
 
     if (letter === "ENTER") {
@@ -268,117 +248,45 @@ const HomeScreen = ({ navigation }) => {
     setGuess(guess + letter)
     
   }
-  if(loggedIn) {
-    return (
-    
-      <SafeAreaView style={{ flex: 1 }} >
-        
-        <Text
-          style={{
-            fontSize: 25,
-            textAlign: 'center',
-            marginVertical: 10,
-          }}>
-          {riddle}
-        </Text>
+  
+  return (
+  
+    <SafeAreaView style={{ flex: 1 }} >
+      
+      <Text
+        style={{
+          fontSize: 25,
+          textAlign: 'center',
+          marginVertical: 10,
+        }}>
+        {riddle}
+      </Text>
 
-        <View style={ styles.dashes }>
-          <GuessRow guess={guess} answer = {answer} />
-        </View>
+      <View style={ styles.dashes }>
+        <GuessRow guess={guess} answer = {answer} />
+      </View>
 
-        
-        <Text style={{ textAlign: 'center', color: 'black' }}>
-          <Text>Guesses Remaining: {5 - guessCounter}</Text>
-        </Text>
-        <Text style={{ textAlign: 'center', color: 'black' }}>
-          <Text>Guesses Made: {guessHistory}</Text>
-        </Text>
+      
+      <Text style={{ textAlign: 'center', color: 'black' }}>
+        <Text>Guesses Remaining: {5 - guessCounter}</Text>
+      </Text>
+      <Text style={{ textAlign: 'center', color: 'black' }}>
+        <Text>Guesses Made: {guessHistory}</Text>
+      </Text>
 
-        <Pressable 
-          disabled = {usedHint}
-          style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green'}]}
-          onPress = {getHint}
-        >
-          <Text style={styles.text}>Hint</Text>
-        </Pressable>
-        
-        <Keyboard onKeyPress={handleKeyPress} />
-      </SafeAreaView>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        
-        <StatusBar style="auto" />
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Username or Email"
-            placeholderTextColor="#003f5c"
-            onChangeText={(email) => setEmail(email)}
-          /> 
-        </View> 
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)}
-          /> 
-        </View> 
-        <TouchableOpacity>
-          <Text style={styles.forgot_button}>Forgot Password?</Text> 
-        </TouchableOpacity> 
-        <TouchableOpacity style={styles.loginBtn} onPress={loginUser}>
-          <Text style={styles.loginText}>LOGIN</Text> 
-        </TouchableOpacity>
-        
-        <Text>{'\n'}Dont have an account?</Text> 
-        <TouchableOpacity onPress={startSignUp}>
-          <Text>Sign Up</Text> 
-        </TouchableOpacity>
-        <Modal 
-          visible = {showModal}
-          
-        >
-          <View style = {{backgroundColor: "#ebab8f",flex: 1}}  >
-            <View style = {{backgroundColor: "#ffffff", margin: 40, paddingTop: 100, marginTop: 150, borderTopLeftRadius: 10,borderTopRightRadius: 10, borderBottomLeftRadius: 10,borderBottomRightRadius: 10,}}>
-              <Text style = {{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}> 
-                Create Your Account!
-                {'\n'}
-                {'\n'}
-              </Text>
-              <TextInput
-                style={styles.signupInput}
-                placeholder="Username"
-                placeholderTextColor="#003f5c"
-                onChangeText={(signupUsername) => setSignupUsername(signupUsername)}
-              /> 
-             <TextInput
-                style={styles.signupInput}
-                placeholder="Email"
-                placeholderTextColor="#003f5c"
-                secureTextEntry={true}
-                onChangeText={(signupEmail) => setSignupEmail(signupEmail)}
-              /> 
-              <TextInput
-                style={styles.signupInput}
-                placeholder="Password"
-                placeholderTextColor="#003f5c"
-                secureTextEntry={true}
-                onChangeText={(signupPassword) => setSignupPassword(signupPassword)}
-              /> 
-              <TouchableOpacity style={styles.signupBtn} onPress={signUpUser}>
-                <Text style={styles.loginText}>SIGN UP</Text> 
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      </View> 
-      );
-  }
-}
+      <Pressable 
+        disabled = {usedHint}
+        style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green'}]}
+        onPress = {getHint}
+      >
+        <Text style={styles.text}>Hint</Text>
+      </Pressable>
+      
+      <Keyboard onKeyPress={handleKeyPress} />
+    </SafeAreaView>
+  );
+} 
+
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
