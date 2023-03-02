@@ -109,7 +109,7 @@ export default function StackScreen() {
               name="ProfileScreen"
               component={ProfileScreen}
               options={{ 
-                title: 'Your Profile',
+                title: 'Your Profile    ', //ghetto fix
                 headerStyle: {
                   backgroundColor: '#f4511e',
                 },
