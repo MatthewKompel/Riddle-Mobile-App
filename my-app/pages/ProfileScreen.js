@@ -46,6 +46,30 @@ const HomeScreen = ({ navigation }) => {
         }}>
         Number of Wins: {userData.statistics.total_wins ? userData.statistics.total_wins : ""}
       </Text>
+      <Text
+        style={{
+          fontSize: 25,
+          textAlign: 'center',
+          marginVertical: 10,
+        }}>
+        Number of Plays: {userData.statistics.total_plays ? userData.statistics.total_plays : ""}
+      </Text>
+      <Text
+        style={{
+          fontSize: 25,
+          textAlign: 'center',
+          marginVertical: 10,
+        }}>
+        Current Winstreak: {userData.statistics.winstreak ? userData.statistics.winstreak : ""}
+      </Text>
+      <Text
+        style={{
+          fontSize: 25,
+          textAlign: 'center',
+          marginVertical: 10,
+        }}>
+        Longest Winstreak: {userData.statistics.longest_winstreak ? userData.statistics.longest_winstreak : ""}
+      </Text>
       <Text style={{ textAlign: 'center', color: 'black' }}>
         Invite Your Friends!
       </Text>

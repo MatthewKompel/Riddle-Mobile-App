@@ -230,6 +230,7 @@ const HomeScreen = ({ navigation }) => {
         alert("You Win! Come back tomorrow to see a brand new riddle!")
         Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
+        setHistory([...guessHistory, guess])
         setGuess("")
         handleWin()
         return
