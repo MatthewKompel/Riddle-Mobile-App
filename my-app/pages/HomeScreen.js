@@ -19,6 +19,7 @@ const Block = ({ letter }: { letter: string }) => (
 
 const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
   const letters = guess.split("")
+  /*
   if (answer.length == 1) {
   
     return (
@@ -104,6 +105,19 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
       </View>
     )
   }
+  */
+
+  return (
+      <View style={styles.guessRow}>
+        <Block letter={letters[0]} />
+        <Block letter={letters[1]} />
+        <Block letter={letters[2]} />
+        <Block letter={letters[3]} />
+        <Block letter={letters[4]} />
+        <Block letter={letters[5]} />
+        <Block letter={letters[6]} />
+      </View>
+    )
 
 }
 
@@ -243,6 +257,10 @@ const HomeScreen = ({ navigation }) => {
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
+      return
+    }
+
+    if (guess.length >= answer.length) {
       return
     }
 
