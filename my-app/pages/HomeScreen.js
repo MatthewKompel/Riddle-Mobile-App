@@ -178,6 +178,7 @@ const HomeScreen = ({ navigation }) => {
   const [guessHistory, setHistory] = useState("")
   const [userData,setUserData] = useState()
   //Sign up modal variables
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
       
@@ -227,9 +228,8 @@ const HomeScreen = ({ navigation }) => {
         setGuessCounter(guessCounter+1)
 
         if(guessCounter === 4) {
-          alert("You ran out of Guesses! The word was " + answer)
+          //alert("You ran out of Guesses! The word was " + answer)
           setHistory([...guessHistory, guess])
-          return
         }
         alert("Incorrect")
 
@@ -241,13 +241,34 @@ const HomeScreen = ({ navigation }) => {
         }
         return
       } else if (guess.toUpperCase() == answer.toUpperCase()) {
-        alert("You Win! Come back tomorrow to see a brand new riddle!")
+        //alert("You Win! Come back tomorrow to see a brand new riddle!")
         Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
         setHistory([...guessHistory, guess])
         setGuess("")
         handleWin()
-        return
+        setModalVisible(true)
+        return(
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Hello World!</Text>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+        )
       }
     }
 
