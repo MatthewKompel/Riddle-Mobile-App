@@ -13,37 +13,46 @@ const PATTERN = [
   1 * ONE_SECOND_IN_MS,
 ]
 
-const Block = ({ letter }: { letter: string }) => (
-  <View style={styles.guessSquare}>
-    <Text style={styles.guessLetter}>{letter}</Text>
-  </View>
-)
+const Block = ({ letter, answer }: { letter: string, answer: string }) => {
+  if (answer.length > 5) {
+    return(
+      <View style={styles.guessSquareFivePlus}>
+        <Text style={styles.guessLetter}>{letter}</Text>
+      </View>
+    )
+  } else {
+    return(
+      <View style={styles.guessSquare}>
+        <Text style={styles.guessLetter}>{letter}</Text>
+      </View>
+    )
+  }
+}
 
 const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
   const letters = guess.split("")
-  /*
   if (answer.length == 1) {
   
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
+        <Block letter={letters[0]} answer = {answer}/>
       </View>
     )
   } else if (answer.length == 2) {
     
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
       </View>
     )
   } else if (answer.length == 3) {
    
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
+        <Block letter={letters[2]} answer = {answer}/>
         
       </View>
     )
@@ -51,76 +60,62 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
 
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
-        <Block letter={letters[3]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
+        <Block letter={letters[2]} answer = {answer}/>
+        <Block letter={letters[3]} answer = {answer}/>
       </View>
     )
   } else if (answer.length == 5) {
   
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
-        <Block letter={letters[3]} />
-        <Block letter={letters[4]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
+        <Block letter={letters[2]} answer = {answer}/>
+        <Block letter={letters[3]} answer = {answer}/>
+        <Block letter={letters[4]} answer = {answer}/>
       </View>
     )
   } else if (answer.length == 6) {
    
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
-        <Block letter={letters[3]} />
-        <Block letter={letters[4]} />
-        <Block letter={letters[5]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
+        <Block letter={letters[2]} answer = {answer}/>
+        <Block letter={letters[3]} answer = {answer}/>
+        <Block letter={letters[4]} answer = {answer}/>
+        <Block letter={letters[5]} answer = {answer}/>
         
       </View>
     )
   } else if (answer.length == 7) {
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
-        <Block letter={letters[3]} />
-        <Block letter={letters[4]} />
-        <Block letter={letters[5]} />
-        <Block letter={letters[6]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
+        <Block letter={letters[2]} answer = {answer}/>
+        <Block letter={letters[3]} answer = {answer}/>
+        <Block letter={letters[4]} answer = {answer}/>
+        <Block letter={letters[5]} answer = {answer}/>
+        <Block letter={letters[6]} answer = {answer}/>
       </View>
     )
   } else if (answer.length == 8) {
     return (
       <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
-        <Block letter={letters[3]} />
-        <Block letter={letters[4]} />
-        <Block letter={letters[5]} />
-        <Block letter={letters[6]} />
-        <Block letter={letters[7]} />
+        <Block letter={letters[0]} answer = {answer}/>
+        <Block letter={letters[1]} answer = {answer}/>
+        <Block letter={letters[2]} answer = {answer}/>
+        <Block letter={letters[3]} answer = {answer}/>
+        <Block letter={letters[4]} answer = {answer}/>
+        <Block letter={letters[5]} answer = {answer}/>
+        <Block letter={letters[6]} answer = {answer}/>
+        <Block letter={letters[7]} answer = {answer}/>
       </View>
     )
   }
-  */
-
-  return (
-      <View style={styles.guessRow}>
-        <Block letter={letters[0]} />
-        <Block letter={letters[1]} />
-        <Block letter={letters[2]} />
-        <Block letter={letters[3]} />
-        <Block letter={letters[4]} />
-        <Block letter={letters[5]} />
-        <Block letter={letters[6]} />
-      </View>
-    )
-
 }
 
 const KeyboardRow = ({
@@ -356,19 +351,34 @@ const styles = StyleSheet.create({
     flex: 1, // TELLS YOU HOW MUch OF THE SCREEN IT TAKES UP, 1 = 100%
   },
 
+// GUESS
   guessRow: {
     flexDirection: "row",
     justifyContent: "center",
+    marginHorizontal: 8,
   },
 
   guessSquare: {
     borderColor: "#d3d6da",
     borderWidth: 2,
     width: 50,
-    height: 50,
+    aspectRatio: 1,
     alignItems: "center",
     justifyContent: "center",
-    margin: 5,
+    marginHorizontal: 4,
+    marginVertical: 10,
+  },
+
+  guessSquareFivePlus: {
+    borderColor: "#d3d6da",
+    borderWidth: 2,
+    flex:1,
+    aspectRatio: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 4,
+    marginVertical: 10,
+
   },
 
   guessLetter: {
@@ -378,9 +388,6 @@ const styles = StyleSheet.create({
   },
 
   // DASHES
-  dashInputStyle:{
-    height: 40, 
-  },
   dashes:{
     flex: 1,
     flexDirection:"row",
@@ -389,34 +396,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexWrap:"wrap"
   },
-  dashEmptyContainer:{
-    flex:0,
-    padding:5,
-    margin:2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dashItemContainer:{
-    flex:0,
-    padding:5,
-    margin:2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth:1,
-    borderBottomColor:"black"
-  },
-  dashItem:{
-    width:20,
-    color: '#841584',
-    fontSize:20,
-    marginLeft: 4,
-    borderBottomWidth:1,
-    borderBottomColor:"black"
-  },
-  dashBlankItem:{
-    width:20,
-    fontSize:20,
-  },
+  
 
   // KEYBOARD
   keyboard: { flexDirection: "column" },

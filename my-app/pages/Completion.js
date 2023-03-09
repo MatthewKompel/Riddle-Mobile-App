@@ -4,8 +4,8 @@ import {Platform, StyleSheet, Text, View, Button, Modal} from 'react-native';
 export const WinPopup = (props) => {  
     return (  
       <>
-      <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
       <View style = {styles.container}>  
+        <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
         <Modal            
           animationType = {"fade"}  
           transparent = {false}  
