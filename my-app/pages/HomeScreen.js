@@ -4,6 +4,8 @@ import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibrati
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
 import { StatusBar } from "expo-status-bar";
+import { WinPopup } from './Completion'
+import ConfettiCannon from 'react-native-confetti-cannon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const ONE_SECOND_IN_MS = 1000;
 
@@ -230,6 +232,28 @@ const HomeScreen = ({ navigation }) => {
         if(guessCounter === 4) {
           //alert("You ran out of Guesses! The word was " + answer)
           setHistory([...guessHistory, guess])
+          setModalVisible(true)
+          return(
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>Hello World!</Text>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Text style={styles.textStyle}>Hide Modal</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+          )
         }
         alert("Incorrect")
 
@@ -248,27 +272,7 @@ const HomeScreen = ({ navigation }) => {
         setGuess("")
         handleWin()
         setModalVisible(true)
-        return(
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>Hello World!</Text>
-                <Pressable
-                  style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}>
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </Pressable>
-              </View>
-            </View>
-          </Modal>
-        )
+        return(WinPopup)
       }
     }
 
