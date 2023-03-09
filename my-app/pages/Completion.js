@@ -14,7 +14,7 @@ export const WinPopup = (props) => {
           {/*All views of Modal*/}  
               <View style = {styles.modal}>  
                 <Text style = {styles.text}>You Win!</Text>  
-                <Text style = {styles.text}></Text>Come back tomorrow to see a brand new riddle!</Text>  
+                <Text style = {styles.text}>Come back tomorrow to see a brand new riddle!</Text>  
                 <Button title="Click To Close Modal" 
                 onPress={() => setModalVisible(!modalVisible)}/>  
               </View>  
@@ -28,7 +28,6 @@ export const LosePopup = (props) => {
   return (  
     <>
     <View style = {styles.container}>  
-      <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
       <Modal            
         animationType = {"fade"}  
         transparent = {false}  
@@ -36,8 +35,8 @@ export const LosePopup = (props) => {
         onRequestClose = {() =>{ console.log("Modal has been closed.") } }>  
         {/*All views of Modal*/}  
             <View style = {styles.modal}>  
-              <Text style = {styles.text}>You Lost</Text>  
-              <Text style = {styles.text}></Text>Come back tomorrow to see a brand new riddle!</Text>  
+              <Text style = {styles.text}>You ran out of Guesses! The word was " + answer </Text>
+              <Text style = {styles.text}>Come back tomorrow to see a brand new riddle!</Text>  
               <Button title="Click To Close Modal" 
               onPress={() => setModalVisible(!modalVisible)}/>  
             </View>  
