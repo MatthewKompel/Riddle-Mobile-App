@@ -266,13 +266,15 @@ const HomeScreen = ({ navigation }) => {
         return
       } else if (guess.toUpperCase() == answer.toUpperCase()) {
         //alert("You Win! Come back tomorrow to see a brand new riddle!")
+        setModalVisible(true)
         Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
         setHistory([...guessHistory, guess])
         setGuess("")
         handleWin()
-        setModalVisible(true)
-        return(WinPopup)
+        return(
+          <WinPopup show={setModalVisible} onHide={() => setModalVisible(false)}/>
+        )
       }
     }
 

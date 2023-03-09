@@ -1,11 +1,7 @@
 import React, {Component} from 'react';  
 import {Platform, StyleSheet, Text, View, Button, Modal} from 'react-native';  
   
-export default class WinPopup extends Component<Props> {  
-  state = {  
-    isVisible: false, //state of modal default false  
-  }  
-  render() {  
+export const WinPopup = (props) => {  
     return (  
       <>
       <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
@@ -13,27 +9,21 @@ export default class WinPopup extends Component<Props> {
         <Modal            
           animationType = {"fade"}  
           transparent = {false}  
-          visible = {this.state.isVisible}  
+          {...props}
           onRequestClose = {() =>{ console.log("Modal has been closed.") } }>  
           {/*All views of Modal*/}  
               <View style = {styles.modal}>  
               <Text style = {styles.text}>You Win!</Text>  
-              <Button title="Click To Close Modal" onPress = {() => {  
-                  this.setState({ isVisible:!this.state.isVisible})}}/>  
+              <Button title="Click To Close Modal" 
+              onPress={() => setModalVisible(!modalVisible)}/>  
           </View>  
         </Modal>  
-        {/*Button will change state to true and view will re-render*/}  
-        <Button   
-           title="Click To Open Modal"   
-           onPress = {() => {this.setState({ isVisible: true})}}  
-        />  
       </View>  
       </>
     );  
-  }  
 }  
   
-const styles = StyleSheet.create({  
+const styles = StyleSheet.create({
   container: {  
     flex: 1,  
     alignItems: 'center',  
