@@ -268,7 +268,9 @@ const HomeScreen = ({ navigation }) => {
         setGuess("")
         handleWin()
         return(
-          <WinPopup show={setModalVisible} onHide={() => setModalVisible(false)}/>
+          <WinPopup 
+          show={setModalVisible} 
+          onHide={() => setModalVisible(false)}/>
         )
       }
     }
