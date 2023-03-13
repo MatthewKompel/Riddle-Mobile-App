@@ -3,7 +3,7 @@ import { SafeAreaView, Text } from 'react-native';
 import ActionBarImage from './ActionBarImage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BarChart } from "react-native-chart-kit";
-import { Dimensions } from "react-native";
+import { Dimensions, Pressable, StyleSheet} from "react-native";
 const screenWidth = Dimensions.get("window").width;
 
 const data = {
@@ -50,6 +50,11 @@ const HomeScreen = ({ navigation }) => {
     }
     getUser()
   },[]);
+
+  async function logoutUser() {
+    console.log("logging out user")
+    AsyncStorage.removeItem("riddle_user")
+  }
   
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -123,11 +128,35 @@ const HomeScreen = ({ navigation }) => {
         withHorizontalLabels={false}
         showValuesOnTopOfBars={true}
       />
-      <Text style={{ textAlign: 'center', color: 'black', marginTop: 20 }}>
+      {/* <Text style={{ textAlign: 'center', color: 'black', marginTop: 20 }}>
         Invite Your Friends!
-      </Text>
+      </Text> */}
+      <Pressable 
+       
+        style={[styles.button, {backgroundColor:'#ba1c21'}]}
+        onPress = {logoutUser}
+      >
+        <Text style={styles.text}>Logout</Text>
+      </Pressable>
     </SafeAreaView>
+    
   );
 };
-
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    marginHorizontal: 135,
+    marginVertical:10,
+    marginTop: 50
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+  }
+})
 export default HomeScreen;

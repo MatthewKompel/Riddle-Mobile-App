@@ -204,6 +204,18 @@ const HomeScreen = ({ navigation }) => {
     })
     .catch(error => console.info(error))
   }
+
+  async function updateStats(solved) {
+    console.log(guessCounter, usedHint, userData)
+    await axios.post(`https://riddlebackend-production.up.railway.app/updateStats`, {
+      guessCounter: guessCounter+1, 
+      usedHint: usedHint,
+      userData: userData,
+      solved: solved
+    }).then(response => {
+      console.log("RES",response)
+    })
+  }
   async function getHint() {
     console.log("getting hint")
     setGuess(answer[0])
@@ -228,6 +240,7 @@ const HomeScreen = ({ navigation }) => {
           //alert("You ran out of Guesses! The word was " + answer)
           setHistory([...guessHistory, guess])
           setModalVisible(true)
+          updateStats(false)
           return(
             <LosePopup 
             show={setModalVisible} 
@@ -251,7 +264,7 @@ const HomeScreen = ({ navigation }) => {
         setGuessCounter(guessCounter+1)
         setHistory([...guessHistory, guess])
         setGuess("")
-        handleWin()
+        updateStats(true)
         return(
           <WinPopup 
           show={setModalVisible} 
@@ -260,9 +273,6 @@ const HomeScreen = ({ navigation }) => {
       }
     }
 
-    async function handleWin() {
-      console.log("GUESSES USED",guessCounter)
-    }
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
