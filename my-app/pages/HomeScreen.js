@@ -172,7 +172,7 @@ const HomeScreen = ({ navigation }) => {
   const [guess, setGuess] = React.useState("")
   const [usedHint, setUsedHint] = useState(false)
   const [guessCounter, setGuessCounter] = useState(0)
-  const [guessHistory, setHistory] = useState("")
+  const [guessHistory, setGuessHistory] = useState("")
   const [userData,setUserData] = useState()
   //Sign up modal variables
   const [modalVisible, setModalVisible] = useState(false);
@@ -180,7 +180,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
       
     getRiddle()
-    setHistory([])
+    setGuessHistory([])
     setGuess("")
     setUsedHint(false)
     setGuessCounter(0)
@@ -195,11 +195,9 @@ const HomeScreen = ({ navigation }) => {
     getUser()
   },[]);
   async function getRiddle() {
-    console.log('getting riddle')
     await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
       setRiddle(response.data.Question)
       console.log(response.data.Answer)
-      console.log(response.data.Answer.length)
       setAnswer(response.data.Answer)
     })
     .catch(error => console.info(error))
@@ -213,11 +211,12 @@ const HomeScreen = ({ navigation }) => {
       userData: userData,
       solved: solved
     }).then(response => {
-      console.log("RES",response)
+      setUserData(response.data)
+      AsyncStorage.setItem("riddle_user",JSON.stringify(response.data))
+      setGuessCounter(0)
     })
   }
   async function getHint() {
-    console.log("getting hint")
     setGuess(answer[0])
     setUsedHint(true)
   }
@@ -238,7 +237,7 @@ const HomeScreen = ({ navigation }) => {
 
         if(guessCounter === 4) {
           //alert("You ran out of Guesses! The word was " + answer)
-          setHistory([...guessHistory, guess])
+          setGuessHistory([...guessHistory, guess])
           setModalVisible(true)
           updateStats(false)
           return(
@@ -250,7 +249,7 @@ const HomeScreen = ({ navigation }) => {
         }
         alert("Incorrect")
 
-        setHistory([...guessHistory, guess + ", "])
+        setGuessHistory([...guessHistory, guess + ", "])
         if(usedHint) {
           setGuess(answer[0])
         } else {
@@ -262,7 +261,7 @@ const HomeScreen = ({ navigation }) => {
         setModalVisible(true)
         Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
-        setHistory([...guessHistory, guess])
+        setGuessHistory([...guessHistory, guess])
         setGuess("")
         updateStats(true)
         return(

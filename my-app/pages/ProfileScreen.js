@@ -6,14 +6,7 @@ import { BarChart } from "react-native-chart-kit";
 import { Dimensions, Pressable, StyleSheet} from "react-native";
 const screenWidth = Dimensions.get("window").width;
 
-const data = {
-  labels: ["1", "2", "3", "4", "5", "6"],
-  datasets: [
-    {
-      data: [5, 6, 12, 14, 20, 22]
-    }
-  ]
-};
+
 
 const chartConfig = {
   backgroundGradientFrom: "#000000",
@@ -27,6 +20,14 @@ const chartConfig = {
 };
 
 const HomeScreen = ({ navigation }) => {
+  const [tableData, setTableData] = useState({
+    labels: ["1", "2", "3", "4", "5", "6"],
+    datasets: [
+      {
+        data: [0,0,0,0,0,0]
+      }
+    ]
+  });
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => <ActionBarImage />,
@@ -43,7 +44,22 @@ const HomeScreen = ({ navigation }) => {
     async function getUser() {
       try{
         const user = await AsyncStorage.getItem("riddle_user")
-        setUserData(JSON.parse(user))
+        const jsonUser = JSON.parse(user)
+        if(jsonUser && jsonUser.game_history) {
+          setUserData(jsonUser)
+          var guessCounts = [0,0,0,0,0,0]
+          for (const x of jsonUser.game_history) {
+            guessCounts[x.num_guesses-1] = guessCounts[x.num_guesses-1] + 1
+          }
+          setTableData({
+            labels: ["1", "2", "3", "4", "5", "6"],
+            datasets: [
+              {
+                data: [guessCounts[0],guessCounts[1],guessCounts[2],guessCounts[3],guessCounts[4],guessCounts[5]]
+              }
+            ]
+          })
+        }
       } catch(e) {
         throw(e)
       }
@@ -81,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        Number of Wins: {userData.statistics.total_wins ? userData.statistics.total_wins : ""}
+        Number of Wins: {userData.total_wins ? userData.total_wins : ""}
       </Text>
       <Text
         style={{
@@ -89,7 +105,7 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        Number of Plays: {userData.statistics.total_plays ? userData.statistics.total_plays : ""}
+        Number of Plays: {userData.total_plays ? userData.total_plays : ""}
       </Text>
       <Text
         style={{
@@ -97,7 +113,7 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        Current Winstreak: {userData.statistics.winstreak ? userData.statistics.winstreak : ""}
+        Current Winstreak: {userData.winstreak ? userData.winstreak : 0}
       </Text>
       <Text
         style={{
@@ -105,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
           textAlign: 'center',
           marginVertical: 10,
         }}>
-        Longest Winstreak: {userData.statistics.longest_winstreak ? userData.statistics.longest_winstreak : ""}
+        Longest Winstreak: {userData.longest_winstreak ? userData.longest_winstreak : ""}
       </Text>
       <Text
         style={{
@@ -119,7 +135,7 @@ const HomeScreen = ({ navigation }) => {
       </Text>
       <BarChart
         style={{paddingRight: 0}}
-        data={data}
+        data={tableData}
         width={screenWidth}
         height={220}
         yAxisLabel="$"
