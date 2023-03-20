@@ -343,6 +343,7 @@ const HomeScreen = ({ navigation }) => {
 } 
 
 const styles = StyleSheet.create({
+
   button: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
   },
 
   guessSquare: {
-    borderColor: "#d3d6da",
+    borderColor: "#27187E",
     borderWidth: 2,
     width: 50,
     aspectRatio: 1,
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
   },
 
   guessSquareFivePlus: {
-    borderColor: "#d3d6da",
+    borderColor: "#27187E",
     borderWidth: 2,
     flex:1,
     aspectRatio: 1,
@@ -398,7 +399,7 @@ const styles = StyleSheet.create({
   guessLetter: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#878a8c",
+    color: "#27187E",
   },
 
   // DASHES
@@ -420,7 +421,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   key: {
-    backgroundColor: "#d3d6da",
+    backgroundColor: "#27187E",
     padding: 10,
     margin: 3,
     borderRadius: 5,
@@ -428,6 +429,7 @@ const styles = StyleSheet.create({
   keyLetter: {
     fontWeight: "500",
     fontSize: 15,
+    color: '#F1F2F6',
   },
 
   //Login
