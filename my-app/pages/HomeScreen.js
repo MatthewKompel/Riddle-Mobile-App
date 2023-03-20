@@ -309,6 +309,7 @@ const HomeScreen = ({ navigation }) => {
           fontSize: 25,
           textAlign: 'center',
           marginVertical: 10,
+        
         }}>
         {riddle}
       </Text>
