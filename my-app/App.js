@@ -5,9 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   useFonts,
-  OpenSans_400Regular,
-  OpenSans_700Bold,
-} from '@expo-google-fonts/open-sans';
+  Righteous_400Regular,
+} from '@expo-google-fonts/righteous';
 import * as SplashScreen from 'expo-splash-screen';
 import HomeScreen from './pages/HomeScreen';
 import ProfileScreen from './pages/ProfileScreen';
@@ -40,8 +39,7 @@ export default function StackScreen() {
 
   })
   let [fontsLoaded] = useFonts({
-    OpenSans_400Regular,
-    OpenSans_700Bold,
+    Righteous_400Regular,
   });
 
   if (!fontsLoaded) {
@@ -69,8 +67,7 @@ export default function StackScreen() {
               headerTintColor: '#fff',
               headerTitleAlign: 'left',
               headerTitleStyle: {
-                fontWeight: 'bold',
-                fontFamily: 'OpenSans_700Bold',
+                fontFamily: 'Righteous_400Regular',
                 fontSize: 28,
               },
               
@@ -87,8 +84,7 @@ export default function StackScreen() {
               headerTintColor: '#fff',
               headerTitleAlign: 'left',
               headerTitleStyle: {
-                fontWeight: 'bold',
-                fontFamily: 'OpenSans_700Bold',
+                fontFamily: 'Righteous_400Regular',
                 fontSize: 28,
               },
             }}
