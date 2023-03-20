@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput, Modal, FlatList} from 'react-native';
+import { StyleSheet, View, SafeAreaView, Text, TouchableOpacity, Button, Vibration, Pressable, TextInput, Modal, FlatList, Container, Image} from 'react-native';
 
 import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
@@ -172,15 +172,16 @@ const HomeScreen = ({ navigation }) => {
   const [guess, setGuess] = React.useState("")
   const [usedHint, setUsedHint] = useState(false)
   const [guessCounter, setGuessCounter] = useState(0)
-  const [guessHistory, setHistory] = useState("")
+  const [guessHistory, setGuessHistory] = useState("")
   const [userData,setUserData] = useState()
+  const [loading, setLoading] = useState(false)
   //Sign up modal variables
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
       
     getRiddle()
-    setHistory([])
+    setGuessHistory([])
     setGuess("")
     setUsedHint(false)
     setGuessCounter(0)
@@ -195,17 +196,30 @@ const HomeScreen = ({ navigation }) => {
     getUser()
   },[]);
   async function getRiddle() {
-    console.log('getting riddle')
+    setLoading(true)
     await axios.get('https://riddlebackend-production.up.railway.app/getRiddle').then(response => {
       setRiddle(response.data.Question)
       console.log(response.data.Answer)
-      console.log(response.data.Answer.length)
       setAnswer(response.data.Answer)
+      setLoading(false)
     })
     .catch(error => console.info(error))
   }
+
+  async function updateStats(solved) {
+    console.log(guessCounter, usedHint, userData)
+    await axios.post(`https://riddlebackend-production.up.railway.app/updateStats`, {
+      guessCounter: guessCounter+1, 
+      usedHint: usedHint,
+      userData: userData,
+      solved: solved
+    }).then(response => {
+      setUserData(response.data)
+      AsyncStorage.setItem("riddle_user",JSON.stringify(response.data))
+      setGuessCounter(0)
+    })
+  }
   async function getHint() {
-    console.log("getting hint")
     setGuess(answer[0])
     setUsedHint(true)
   }
@@ -226,8 +240,9 @@ const HomeScreen = ({ navigation }) => {
 
         if(guessCounter === 4) {
           //alert("You ran out of Guesses! The word was " + answer)
-          setHistory([...guessHistory, guess])
+          setGuessHistory([...guessHistory, guess])
           setModalVisible(true)
+          updateStats(false)
           return(
             <LosePopup 
             show={setModalVisible} 
@@ -237,7 +252,7 @@ const HomeScreen = ({ navigation }) => {
         }
         alert("Incorrect")
 
-        setHistory([...guessHistory, guess + ", "])
+        setGuessHistory([...guessHistory, guess + ", "])
         if(usedHint) {
           setGuess(answer[0])
         } else {
@@ -249,9 +264,9 @@ const HomeScreen = ({ navigation }) => {
         setModalVisible(true)
         Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
-        setHistory([...guessHistory, guess])
+        setGuessHistory([...guessHistory, guess])
         setGuess("")
-        handleWin()
+        updateStats(true)
         return(
           <WinPopup 
           show={setModalVisible} 
@@ -260,9 +275,6 @@ const HomeScreen = ({ navigation }) => {
       }
     }
 
-    async function handleWin() {
-      console.log("GUESSES USED",guessCounter)
-    }
 
     if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
@@ -278,40 +290,55 @@ const HomeScreen = ({ navigation }) => {
   }
   
   return (
-  
-    <SafeAreaView style={{ flex: 1 }} >
+    
+    <SafeAreaView style={{ flex: 1}} >
+      <View style ={{justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', display: loading? '': 'none'}}>
+      <Image
+          source={require('my-app/assets/loading.gif')}
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: 40 / 2,
+          }}
+        />
+      </View>
       
       <Text
         style={{
+          display: loading? 'none': '',
           fontSize: 25,
           textAlign: 'center',
           marginVertical: 10,
+        
         }}>
         {riddle}
       </Text>
 
-      <View style={ styles.dashes }>
+      <View style={[ styles.dashes, {display: loading? 'none': '',} ]}>
         <GuessRow guess={guess} answer = {answer} />
       </View>
 
       
-      <Text style={{ textAlign: 'center', color: 'black' }}>
+      <Text style={{ textAlign: 'center', color: 'black', display: loading? 'none': '', }}>
         <Text>Guesses Remaining: {5 - guessCounter}</Text>
       </Text>
-      <Text style={{ textAlign: 'center', color: 'black' }}>
+      <Text style={{ textAlign: 'center', color: 'black', display: loading? 'none': '',}}>
         <Text>Guesses Made: {guessHistory}</Text>
       </Text>
 
       <Pressable 
+        
         disabled = {usedHint}
-        style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green'}]}
+        style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green', display: loading? 'none': '',} ]}
         onPress = {getHint}
       >
         <Text style={styles.text}>Hint</Text>
       </Pressable>
-      
+      <View style = {{display: loading? 'none': '',}}>
       <Keyboard onKeyPress={handleKeyPress} />
+      </View>
     </SafeAreaView>
+    
   );
 } 
 
@@ -381,7 +408,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf:"auto",
     justifyContent: 'center',
-    flexWrap:"wrap"
+    flexWrap:"wrap",
   },
   
 
