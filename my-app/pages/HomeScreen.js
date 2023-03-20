@@ -5,7 +5,6 @@ import ActionBarImage from './ActionBarImage';
 import axios from 'axios';
 import { StatusBar } from "expo-status-bar";
 import { WinPopup, LosePopup } from './Completion'
-import ConfettiCannon from 'react-native-confetti-cannon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const ONE_SECOND_IN_MS = 1000;
 
@@ -243,12 +242,6 @@ const HomeScreen = ({ navigation }) => {
           setGuessHistory([...guessHistory, guess])
           setModalVisible(true)
           updateStats(false)
-          return(
-            <LosePopup 
-            show={setModalVisible} 
-            onHide={() => setModalVisible(false)}
-            answer={answer}/>
-          )
         }
         alert("Incorrect")
 
@@ -267,11 +260,6 @@ const HomeScreen = ({ navigation }) => {
         setGuessHistory([...guessHistory, guess])
         setGuess("")
         updateStats(true)
-        return(
-          <WinPopup 
-          show={setModalVisible} 
-          onHide={() => setModalVisible(false)}/>
-        )
       }
     }
 
@@ -292,6 +280,18 @@ const HomeScreen = ({ navigation }) => {
   return (
     
     <SafeAreaView style={{ flex: 1}} >
+      <View >
+        <WinPopup
+            visible = {modalVisible} 
+            onHide={() => setModalVisible(false)}/>
+      </View>
+      <View>
+      <LosePopup 
+            visible = {modalVisible}
+            show={setModalVisible} 
+            onHide={() => setModalVisible(false)}
+            answer={answer}/>
+      </View>
       <View style ={{justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', display: loading? '': 'none'}}>
       <Image
           source={require('my-app/assets/loading.gif')}
