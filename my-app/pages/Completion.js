@@ -1,11 +1,13 @@
-import React, {Component} from 'react';  
+import React, {Component, useState, useEffect} from 'react';  
 import {Platform, StyleSheet, Text, View, Button, Modal} from 'react-native';  
+import ConfettiCannon from 'react-native-confetti-cannon';
   
 export const WinPopup = (props) => {  
+  const [modalVisible, setModalVisible] = useState(false);
     return (  
       <>
       <View style = {styles.container}>  
-        <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
+        
         <Modal            
           animationType = {"fade"}  
           transparent = {false}  
@@ -16,8 +18,9 @@ export const WinPopup = (props) => {
                 <Text style = {styles.text}>You Win!</Text>  
                 <Text style = {styles.text}>Come back tomorrow to see a brand new riddle!</Text>  
                 <Button title="Click To Close Modal" 
-                onPress={() => setModalVisible(!modalVisible)}/>  
+                onPress={() => setModalVisible(false)}/>  
               </View>  
+              <ConfettiCannon count={200} origin={{x: -10, y: 0}} />
         </Modal>  
       </View>  
       </>
