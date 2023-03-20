@@ -52,6 +52,9 @@ export default function StackScreen() {
         
         <Stack.Navigator
           initialRouteName="HomeScreen"
+          screenOptions={{
+            cardStyle: { backgroundColor: '#AEB8FE' }
+        }}
           
         >
           <Stack.Screen
@@ -61,7 +64,7 @@ export default function StackScreen() {
             options={{ 
               title: 'Riddle',
               headerStyle: {
-                backgroundColor: '#f4511e',
+                backgroundColor: '#27187E',
               },
               headerTintColor: '#fff',
               headerTitleAlign: 'left',
