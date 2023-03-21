@@ -38,9 +38,11 @@ const HomeScreen = ({ navigation }) => {
     ]
   });
   React.useLayoutEffect(() => {
+    /*
     navigation.setOptions({
       headerRight: () => <ActionBarImage />,
     });
+    */
   }, [navigation]);
   const [userData,setUserData] = useState({
     username: "",

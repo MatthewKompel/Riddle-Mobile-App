@@ -77,12 +77,12 @@ export default function StackScreen() {
             name="ProfileScreen"
             component={ProfileScreen}
             options={{ 
-              title: 'Your Profile    ', //ghetto fix
+              title: 'Your Profile', //ghetto fix
               headerStyle: {
-                backgroundColor: '#f4511e',
+                backgroundColor: '#27187E',
               },
               headerTintColor: '#fff',
-              headerTitleAlign: 'left',
+              headerTitleAlign: 'right',
               headerTitleStyle: {
                 fontFamily: 'Righteous_400Regular',
                 fontSize: 28,
