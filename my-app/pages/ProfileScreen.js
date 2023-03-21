@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, TextInput,Modal, Image} from 'react-native';
-import ActionBarImage from './ActionBarImage';
+import ActionBarProfile from './ActionBarProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions, Pressable, StyleSheet} from "react-native";
@@ -38,11 +38,9 @@ const HomeScreen = ({ navigation }) => {
     ]
   });
   React.useLayoutEffect(() => {
-    /*
     navigation.setOptions({
-      headerRight: () => <ActionBarImage />,
+      headerRight: () => <ActionBarProfile />,
     });
-    */
   }, [navigation]);
   const [userData,setUserData] = useState({
     username: "",

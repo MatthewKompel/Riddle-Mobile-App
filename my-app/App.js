@@ -76,8 +76,9 @@ export default function StackScreen() {
           <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
+            options={({ route }) => ({ title: ProfileScreen.userData.username })}
             options={{ 
-              title: 'Your Profile', //ghetto fix
+              title: 'Your Profile', 
               headerStyle: {
                 backgroundColor: '#27187E',
               },
