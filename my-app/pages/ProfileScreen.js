@@ -15,7 +15,8 @@ const chartConfig = {
   backgroundGradientFromOpacity: 1,
   backgroundGradientTo: "#000000",
   backgroundGradientToOpacity: 1,
-  color: (opacity = 1) => `rgba(0, 197, 31, ${opacity})`,
+  backgroundColor: "#27187E",
+  color: (opacity = 1) => `rgba(241, 242, 246, ${opacity})`,
   strokeWidth: 1, // optional, default 3
   barPercentage: 1,
   useShadowColorFromDataset: false // optional
