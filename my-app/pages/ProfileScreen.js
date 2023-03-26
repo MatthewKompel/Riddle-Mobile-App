@@ -6,8 +6,8 @@ import { BarChart } from "react-native-chart-kit";
 import { Dimensions, Pressable, StyleSheet} from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
+import { Icon } from 'react-native-elements'
 const screenWidth = Dimensions.get("window").width;
-
 
 
 const chartConfig = {
@@ -272,9 +272,20 @@ const HomeScreen = ({ navigation }) => {
           <Modal 
             visible = {showModal}
             
+            
           >
-            <View style = {{backgroundColor: "#ebab8f",flex: 1}}  >
+              <View style = {{backgroundColor: "#ebab8f",flex: 1}}  >
               <View style = {{backgroundColor: "#ffffff", margin: 40, paddingTop: 100, marginTop: 150, borderTopLeftRadius: 10,borderTopRightRadius: 10, borderBottomLeftRadius: 10,borderBottomRightRadius: 10,}}>
+                <TouchableOpacity
+                    style = {{...StyleSheet.absoluteFillObject,
+                      alignSelf: 'flex-end',
+                      marginTop: 5,
+                      position: 'absolute', alignItems: 'right' }}
+                    onPress={() => {
+                        setShowModal(false)
+                    } }>
+                      <Icon name='close' />
+                </TouchableOpacity>
                 <Text style = {{fontSize: 20, fontWeight: 'bold', textAlign: 'center'}}> 
                   Create Your Account!
                   {'\n'}
