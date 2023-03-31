@@ -30,6 +30,10 @@ const HomeScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false)
+
+  const[signupUsername,setSignupUsername] = useState("")
+  const[signupPassword,setSignupPassword] = useState("")
+  const[signupEmail,setSignupEmail] = useState("")
   const [tableData, setTableData] = useState({
     labels: ["1", "2", "3", "4", "5", "6"],
     datasets: [
@@ -49,30 +53,6 @@ const HomeScreen = ({ navigation }) => {
       total_wins: ""
     }
   })
-  async function getUser() {
-      try{
-        const user = await AsyncStorage.getItem("riddle_user")
-        const jsonUser = JSON.parse(user)
-        if(jsonUser && jsonUser.game_history) {
-          setLoggedIn(true)
-          setUserData(jsonUser)
-          var guessCounts = [0,0,0,0,0,0]
-          for (const x of jsonUser.game_history) {
-            guessCounts[x.num_guesses-1] = guessCounts[x.num_guesses-1] + 1
-          }
-          setTableData({
-            labels: ["1", "2", "3", "4", "5", "6"],
-            datasets: [
-              {
-                data: [guessCounts[0],guessCounts[1],guessCounts[2],guessCounts[3],guessCounts[4],guessCounts[5]]
-              }
-            ]
-          })
-        }
-      } catch(e) {
-        throw(e)
-      }
-    }
   useEffect(() => {
     getUser()
   },[]);
@@ -116,13 +96,25 @@ const HomeScreen = ({ navigation }) => {
           ]
         })
         setLoggedIn(true)
+      } else {
+        console.log("NOT LOGGED IN")
+        setLoggedIn(false)
       }
     } catch(e) {
       throw(e)
     }
   }
   async function signUpUser() {
+    const currentGame = AsyncStorage.getItem("current_game")
+    console.log("current",currentGame)
+    console.log("adding user")
+    // const res = await axios.post('https://riddlebackend-production.up.railway.app/addUser',{
+    //   password: signupPassword,
+    //   email: signupEmail,
+    //   username: signupUsername
+    // }).then(response => {
 
+    // })
   }
   async function startSignUp() {
     setShowModal(true)
@@ -245,7 +237,7 @@ const HomeScreen = ({ navigation }) => {
             <TextInput
               style={styles.TextInput}
               placeholder="Username or Email"
-              placeholderTextColor="#003f5c"
+              placeholderTextColor="#fff"
               onChangeText={(email) => setEmail(email)}
             /> 
           </View> 
@@ -253,7 +245,7 @@ const HomeScreen = ({ navigation }) => {
             <TextInput
               style={styles.TextInput}
               placeholder="Password"
-              placeholderTextColor="#003f5c"
+              placeholderTextColor="#fff"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
             /> 
@@ -274,8 +266,8 @@ const HomeScreen = ({ navigation }) => {
             
             
           >
-              <View style = {{backgroundColor: "#ebab8f",flex: 1}}  >
-              <View style = {{backgroundColor: "#ffffff", margin: 40, paddingTop: 100, marginTop: 150, borderTopLeftRadius: 10,borderTopRightRadius: 10, borderBottomLeftRadius: 10,borderBottomRightRadius: 10,}}>
+              <View style = {{backgroundColor: "#27187e",flex: 1}}  >
+              <View style = {{backgroundColor: "#aeb8fe", margin: 40, paddingTop: 100, marginTop: 150, borderTopLeftRadius: 10,borderTopRightRadius: 10, borderBottomLeftRadius: 10,borderBottomRightRadius: 10,}}>
                 <TouchableOpacity
                     style = {{...StyleSheet.absoluteFillObject,
                       alignSelf: 'flex-end',
@@ -294,6 +286,7 @@ const HomeScreen = ({ navigation }) => {
                 <TextInput
                   style={styles.signupInput}
                   placeholder="Username"
+                  value= {signupUsername}
                   placeholderTextColor="#003f5c"
                   onChangeText={(signupUsername) => setSignupUsername(signupUsername)}
                 /> 
@@ -301,7 +294,8 @@ const HomeScreen = ({ navigation }) => {
                   style={styles.signupInput}
                   placeholder="Email"
                   placeholderTextColor="#003f5c"
-                  secureTextEntry={true}
+                  
+                  value= {signupEmail}
                   onChangeText={(signupEmail) => setSignupEmail(signupEmail)}
                 /> 
                 <TextInput
@@ -309,6 +303,7 @@ const HomeScreen = ({ navigation }) => {
                   placeholder="Password"
                   placeholderTextColor="#003f5c"
                   secureTextEntry={true}
+                  value= {signupPassword}
                   onChangeText={(signupPassword) => setSignupPassword(signupPassword)}
                 /> 
                 <TouchableOpacity style={styles.signupBtn} onPress={signUpUser}>
@@ -337,9 +332,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 21,
   },
+  loginText: {
+    color: 'white'
+  },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#aeb8fe",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -347,11 +345,12 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   inputView: {
-    backgroundColor: "#f79b65",
+    backgroundColor: "#27187e",
     borderRadius: 30,
     width: "70%",
     height: 45,
     marginBottom: 20,
+    color: 'green',
     alignItems: "center",
   },
   TextInput: {
@@ -359,6 +358,7 @@ const styles = StyleSheet.create({
     flex: 10,
     padding: 10,
     marginLeft: 10,
+    color: 'white',
   },
   forgot_button: {
     height: 30,
@@ -371,7 +371,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    backgroundColor: "#fa8541",
+    color: 'white',
+    backgroundColor: "#27187e",
   },
   //Sign up 
   signupInput: {
@@ -387,7 +388,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 64,
-    backgroundColor: "#fa8541",
+    backgroundColor: "#27187e",
   },
 })
 export default HomeScreen;
