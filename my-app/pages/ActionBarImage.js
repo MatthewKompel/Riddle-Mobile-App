@@ -9,10 +9,10 @@ const ActionBarImage = () => {
   return (
     <View style={{ flexDirection: 'row' }}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('ProfileScreen')}
+        onPress={() => navigation.navigate('ProfileScreen', { name: 'Custom profile header' })}
         activeOpacity={0.5}>
         <Image
-          source={require('my-app/assets/images/icons8-registration-64.png')}
+          source={require('my-app/assets/images/icons8-registration-48.png')}
           style={{
             width: 40,
             height: 40,

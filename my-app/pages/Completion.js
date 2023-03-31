@@ -25,7 +25,7 @@ export const WinPopup = (props) => {
       </View>  
       </>
     );  
-}  
+}
 
 export const LosePopup = (props) => {  
   return (  
@@ -54,21 +54,22 @@ const styles = StyleSheet.create({
     flex: 1,  
     alignItems: 'center',  
     justifyContent: 'center',  
-    backgroundColor: '#ecf0f1',  
+    backgroundColor: 'transparent',  
   },  
+
   modal: {  
-  justifyContent: 'center',  
-  alignItems: 'center',   
-  backgroundColor : "#00BCD4",   
-  height: 300 ,  
-  width: '80%',  
-  borderRadius:10,  
-  borderWidth: 1,  
-  borderColor: '#fff',    
-  marginTop: 80,  
-  marginLeft: 40,  
-   
-   },  
+    justifyContent: 'center',  
+    alignItems: 'center',   
+    backgroundColor : "#758BFD",   
+    height: 300 ,  
+    width: '80%',  
+    borderRadius:10,  
+    borderWidth: 2,  
+    borderColor: '#27187E',    
+    marginTop: 80,  
+    marginLeft: 40,  
+  },  
+  
    text: {  
       color: '#3f2949',  
       marginTop: 10  

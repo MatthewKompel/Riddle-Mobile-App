@@ -120,9 +120,11 @@ const GuessRow = ({ guess, answer }: { guess: string, answer: string }) => {
 const KeyboardRow = ({
   letters,
   onKeyPress,
+  getHint
 }: {
   letters: string[],
   onKeyPress: (letter: string) => void,
+  getHint: (letter: Boolean) => True 
 }) => (
   <View style={styles.keyboardRow}>
     {letters.map(letter => (
@@ -135,7 +137,7 @@ const KeyboardRow = ({
   </View>
 )
 
-const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
+const Keyboard = ({ onKeyPress, usedHint, loading, getHint }: { onKeyPress: (letter: string) => void, getHint: (letter: Boolean) => True }) => {
   const row1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
   const row2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
   const row3 = ["Z", "X", "C", "V", "B", "N", "M", "⌫"]
@@ -146,8 +148,16 @@ const Keyboard = ({ onKeyPress }: { onKeyPress: (letter: string) => void }) => {
       <KeyboardRow letters={row2} onKeyPress={onKeyPress} />
       <KeyboardRow letters={row3} onKeyPress={onKeyPress} />
       <View style={styles.keyboardRow}>
+        <TouchableOpacity
+          disabled = {usedHint}
+          style={[styles.hintKey, {backgroundColor: usedHint ? '#FF8600' : 'orange', display: loading ? 'none': '',} ]}
+          onPress = {() => onKeyPress("HINT")}
+        >
+          <Text style={styles.text}>Hint!</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => onKeyPress("ENTER")}>
-          <View style={styles.key}>
+          <View style={styles.enterKey}>
             <Text style={styles.keyLetter}>ENTER</Text>
           </View>
         </TouchableOpacity>
@@ -224,8 +234,12 @@ const HomeScreen = ({ navigation }) => {
   }
 
   const handleKeyPress = (letter: string) => {
-
-    if (letter === "ENTER") {
+    console.log('handling')
+    if(letter ==="HINT") {
+      getHint()
+      return
+    }
+    else if (letter === "ENTER") {
       if (guess.length < answer.length) {
         alert("Word too short.")
         return
@@ -238,6 +252,11 @@ const HomeScreen = ({ navigation }) => {
         setGuessCounter(guessCounter+1)
 
         if(guessCounter === 4) {
+          AsyncStorage.setItem("current_game",JSON.stringify({
+            guessCounter: guessCounter+1, 
+            usedHint: usedHint,
+            solved: false
+          }))
           //alert("You ran out of Guesses! The word was " + answer)
           setGuessHistory([...guessHistory, guess])
           setModalVisible(true)
@@ -254,6 +273,11 @@ const HomeScreen = ({ navigation }) => {
         return
       } else if (guess.toUpperCase() == answer.toUpperCase()) {
         //alert("You Win! Come back tomorrow to see a brand new riddle!")
+        AsyncStorage.setItem("current_game",JSON.stringify({
+          guessCounter: guessCounter+1, 
+          usedHint: usedHint,
+          solved: true
+        }) )
         setModalVisible(true)
         Vibration.vibrate(PATTERN)
         setGuessCounter(guessCounter+1)
@@ -264,12 +288,12 @@ const HomeScreen = ({ navigation }) => {
     }
 
 
-    if (letter === "⌫") {
+    else if (letter === "⌫") {
       setGuess(guess.slice(0, -1))
       return
     }
 
-    if (guess.length >= answer.length) {
+    else if (guess.length >= answer.length) {
       return
     }
 
@@ -307,6 +331,7 @@ const HomeScreen = ({ navigation }) => {
         style={{
           display: loading? 'none': '',
           fontSize: 25,
+          fontFamily: 'Righteous_400Regular',
           textAlign: 'center',
           marginVertical: 10,
         
@@ -326,14 +351,7 @@ const HomeScreen = ({ navigation }) => {
         <Text>Guesses Made: {guessHistory}</Text>
       </Text>
 
-      <Pressable 
-        
-        disabled = {usedHint}
-        style={[styles.button, {backgroundColor: usedHint ? '#607D8B' : 'green', display: loading? 'none': '',} ]}
-        onPress = {getHint}
-      >
-        <Text style={styles.text}>Hint</Text>
-      </Pressable>
+      
       <View style = {{display: loading? 'none': '',}}>
       <Keyboard onKeyPress={handleKeyPress} />
       </View>
@@ -348,7 +366,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
-    paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
     marginHorizontal: 135,
@@ -422,8 +439,38 @@ const styles = StyleSheet.create({
   },
   key: {
     backgroundColor: "#27187E",
-    padding: 10,
-    margin: 3,
+    borderColor: "white",
+    borderWidth: "2px",
+    width: 37,
+    aspectRatio: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
+    margin: 2,
+    borderRadius: 5,
+  },
+  enterKey: {
+    backgroundColor: "green",
+    borderColor: "white",
+    borderWidth: "2px",
+    width: 100,
+    aspectRatio: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
+    margin: 2,
+    borderRadius: 5,
+  },
+  hintKey: {
+    backgroundColor: "orange",
+    borderColor: "white",
+    borderWidth: "2px",
+    width: 100,
+    aspectRatio: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
+    margin: 2,
     borderRadius: 5,
   },
   keyLetter: {
